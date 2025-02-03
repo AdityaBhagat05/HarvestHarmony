@@ -1,8 +1,9 @@
 import logo from "./assets/logo.avif"
+import SignInButton from "./SignInButton.jsx"
 export default function navbar() {
     return (
         <div className="background-image">
-            <nav className="navbar">
+            <div className="navbar">
                 <img src={logo} alt="logo" />
                 <h1>Hello Harmony</h1>
                 <ul>
@@ -11,7 +12,8 @@ export default function navbar() {
                     <li><a href="#">Services</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
-            </nav>
+            </div>
+            <SignInButton />
         </div>
     );
 }
