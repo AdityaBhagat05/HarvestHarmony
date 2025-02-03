@@ -53,7 +53,7 @@
 .sign-in-button {
   margin: 5%;
   padding: 10px 20px;
-  background-color:rgb(110, 163, 30);
+  background-color:rgb(0, 135, 83);
   color: white;
   border: none;
   width: 15%;
@@ -64,7 +64,7 @@
 }
 
 .sign-in-button:hover {
-  background-color:rgb(57, 95, 0);
+  background-color:rgb(0, 86, 62);
 }
 .offer-container {
   max-width: 1200px;
