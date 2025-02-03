@@ -1,4 +1,7 @@
-import i from "./assets/agreenfarm.png"
+import i1 from "./assets/landing2.1.png"
+import i2 from "./assets/landing2.2.jpg"
+import i3 from "./assets/landing2.3.png"
+import i4 from "./assets/landing2.4.png"
 function landing2() {
     return (
         <div className="offer-container">
@@ -14,23 +17,23 @@ function landing2() {
     
           <div className="cards-grid">
             <div className="offer-card">
-              <img src={i} alt="Crop in hands" />
+              <img src={i1} alt="Crop in hands" />
               <h3>Bespoke Tour Packages</h3>
             </div>
     
             <div className="offer-card">
-              <img src={i} alt="Money and phone" />
+              <img src={i2} alt="Money and phone" />
               <h3>Certified Activity Guides</h3>
             </div>
     
             <div className="offer-card">
-              <img src={i} alt="Fertilizer in hands" />
+              <img src={i3} alt="Fertilizer in hands" />
               <h3>A la Carte Activities</h3>
             </div>
     
             <div className="ministry-logo">
               <img 
-                src={i} 
+                src={i4} 
                 alt="Ministry of Agriculture Logo" 
               />
               <p>Ministry of Agriculture & Farmers Welfare<br />Government of India</p>

@@ -6,7 +6,7 @@
 .background-image {
   position: relative;
   height: 100vh;
-  background-image: url(./assets/agreenfarm.png);
+  background-image: url(./assets/landing1.png);
   background-size: cover;
   background-position: center;
 }
@@ -56,6 +56,7 @@
   background-color:rgb(110, 163, 30);
   color: white;
   border: none;
+  width: 15%;
   border-radius: 30px;
   cursor: pointer;
   font-size: 200%;
@@ -119,7 +120,7 @@
   position: absolute;
   bottom: 20px;
   left: 20px;
-  color: white;
+  color: rgb(255, 255, 255);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   font-size: 1.5rem;
 }
@@ -138,10 +139,10 @@
   line-height: 1.4;
 }
 .testimonials-container {
-  background-image: url(./assets/agreenfarm.png);
+  background-image: url(./assets/landing3.jpg);
   background-size: cover;
   padding: 40px 20px;
-  min-height: 70vh;
+  min-height: 100vh;
 }
 
 .testimonials-container h1 {
@@ -188,8 +189,8 @@
   font-style: italic;
 }
 .about-container {
-  min-height: 70vh;
-  background-image: url(./assets/agreenfarm.png);
+  min-height: 100vh;
+  background-image: url(./assets/landing4.png);
   background-size: cover;
   background-position: center;
   padding: 40px 20px;
@@ -220,14 +221,14 @@
 }
 
 .about-text p {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
   color: #000;
   margin-bottom: 20px;
 }
 .contact-container {
   min-height: 100vh;
-  background-image: url(./assets/agreenfarm.png);
+  background-image: url(./assets/landing5.png);
   background-size: cover;
   background-position: center;
   display: flex;
@@ -264,12 +265,12 @@
 }
 
 .contact-item h2 {
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 10px;
 }
 
 .contact-item p {
-  font-size: 20px;
+  font-size: 24px;
   color: white;
 }
 
