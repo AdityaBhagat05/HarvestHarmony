@@ -2,122 +2,143 @@ import express from "express";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 import passport from "passport";
-import { Strategy } from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
-import env from "dotenv";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
-const app=express();
-const port=3000;
-const saltRounds=10;
-env.config();
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+const saltRounds = 10;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Middleware
 app.use(express.json());
-app.use(
-    session({
-      secret: "PASSWORD",
-      resave: true,
-      saveUninitialized: true,
-    })
-  );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true
+}));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "YOUR_SECRET_KEY",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === "production" }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Database connection
 mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/HarvestHarmony", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(() => console.log("Connected to MongoDB"))
-  .catch(err => console.error("MongoDB connection error:", err));
-const userSchema = new mongoose.Schema({
-    email: String,
-    password: String,
-});
+})
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => console.error("MongoDB connection error:", err));
 
+// User model
+const userSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+});
 const User = mongoose.model("User", userSchema);
 
-app.get("/", (req,res)=>{ 
-    console.log("LandingPage test");
-})
-
-app.get("/login", (req,res)=>{
-  console.log("login test");
-})
-
-app.get("/signup", (req,res)=>{
-  console.log("signup test");
-})
-
-app.get("/homePage", (req,res)=>{
-  if(req.isAuthenticated()){
-    console.log("Logged onto home page");
-  }
-  else{
-    console.log("Could not login");
-    res.redirect("/login");
-  }
-})
-
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/homePage",
-    failureRedirect: "/login",
-  })
-);
-app.post("/register", async (req, res) => {
-  const email = req.body.username;
-  const password = req.body.password;
-  console.log(email,password);
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.redirect("/login");
-    }
-    console.log(password,saltRounds);
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = new User({ email, password: hashedPassword });
-    await newUser.save();
-    req.login(newUser, (err) => {
-      if (err) {
-        console.log("Error while registering");
-        console.error("Login error:", err);
-        return res.redirect("/login");
-      }
-      res.redirect("/secrets");
-    });
-  } catch (err) {
-    console.error(err);
-    res.redirect("/register");
-  }
-});
-passport.use(
-  new Strategy(async (username, password, done) => {
+// Passport configuration
+passport.use(new LocalStrategy(
+  { usernameField: 'email' },
+  async (email, password, done) => {
     try {
-      const user = await User.findOne({ email: username });
-      if (!user) {
-        return done(null, false, { message: "User not found" });
-      }
+      const user = await User.findOne({ email });
+      if (!user) return done(null, false, { message: "User not found" });
       const isValid = await bcrypt.compare(password, user.password);
-      return isValid ? done(null, user) : done(null, false, { message: "Incorrect password" });
+      if (isValid) {
+        return done(null, user);
+      } else {
+        return done(null, false, { message: "Incorrect password" });
+      }
     } catch (err) {
       return done(err);
     }
-  })
-);
+  }
+));
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
+passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
     done(null, user);
   } catch (err) {
-    done(err, null);
+    done(err);
   }
-})
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+});
+
+// Routes
+app.get("/api/", (req, res) => {
+  res.json({ message: "Welcome to HarvestHarmony API" });
+});
+
+app.post("/api/login", passport.authenticate("local"), (req, res) => {
+  console.log("loginbackend");
+  res.json({ message: "Login successful", user: req.user });
+});
+
+app.post("/api/register", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = new User({ email, password: hashedPassword });
+    await newUser.save();
+    req.login(newUser, (err) => {
+      if (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ message: "Error during login after registration" });
+      }
+      res.json({ message: "Registration successful", user: newUser });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error during registration" });
+  }
+});
+
+app.get("/api/homePage", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ message: "Welcome to the home page", user: req.user });
+  } else {
+    res.status(401).json({ message: "Not authenticated" });
+  }
+});
+
+app.get("/api/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Error during logout" });
+    }
+    res.json({ message: "Logout successful" });
   });
+});
+
+// Serve static files in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
