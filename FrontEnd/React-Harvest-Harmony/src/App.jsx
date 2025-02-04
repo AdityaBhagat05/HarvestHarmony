@@ -68,23 +68,35 @@ function Login() {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-container">
+        <h2>Sign In</h2>
+      <div className="login-box">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+          <div className="form-footer">
+            <a href="/Signup">Create Account</a>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 
@@ -121,44 +133,62 @@ function Signup() {
   
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={fullname}
-        onChange={(e) => setFullname(e.target.value)}
-        placeholder="Full name"
-        required
-      />
-      <input
-        type="text"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        placeholder="Phone number"
-        required
-      />
-      <input
-        type="date"
-        value={dob}
-        onChange={(e) => setDob(e.target.value)}
-        placeholder="dd-mm-yyyy"
-        required
-      />
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Sign Up</button>
-    </form>
+    <div className="signup-container">
+        <h2>Create Account</h2>
+      <div className="signup-box">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="text"
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
+              placeholder="Full Name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              placeholder="Date of Birth"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button type="submit">Sign Up</button>
+          <div className="form-footer">
+            <p>Already have an account? <a href="/login">Login here</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 function TellUsAboutYourFarm() {
