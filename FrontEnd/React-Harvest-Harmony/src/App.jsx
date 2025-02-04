@@ -3,23 +3,17 @@ import Landing2 from "./landing2.jsx"
 import Landing3 from "./landing3.jsx"
 import Landing4 from "./landing4.jsx"
 import Landing5 from "./landing5.jsx"
-import Home from "./Home.jsx"
+import CropMatrix from './CropMatrix';
+import useChatbot from './hooks/useChatbot';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-// function LandingPage() {
-//   return (
-//     <div>
-//       <h1>Welcome to HarvestHarmony</h1>
-//       <Link to="/login">Login</Link>
-//       <Link to="/signup">Sign Up</Link>
-//     </div>
-//   );
-// }
+import { BrowserRouter as Router, Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom';
+import i1 from "./assets/mail.jpg"
+import i2 from "./assets/pp.jpg"
+
 function LandingPage() {
   return (
     <>
-      <div className="background-image">
+    <div className="background-image">
         <div className="bottom-container">
           <h3 className="bottom-heading">Harvest <br></br> Harmony</h3>
           <Link to="/login"><SignInButton /></Link>
@@ -29,51 +23,27 @@ function LandingPage() {
       <Landing3 />
       <Landing4 />
       <Landing5 />
-    <div>
-      {/* <Link to="/login">Login</Link>
-      <Link to="/signup">Sign Up</Link> */}
-    </div>
-    <Home />
+      {/* <Home /> */}
     </>
   );
 }
 
-// Login Component
-function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const history=useHistory();
+function Login(){
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful:", data);
-        history.push("/HomePage");
-            } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred during login');
-    }
+    console.log("Logged in with username:", username);
+    navigate("/home"); // Direct access to HomePage
   };
+
   return (
     <div className="login-container">
         <h2>Sign In</h2>
       <div className="login-box">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="form-group">
             <input
               type="text"
@@ -100,45 +70,27 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
-// Signup Component
-function Signup() {
-  const [fullname, setFullname] = useState('');
-  const [phone, setPhone] = useState('');
-  const [dob, setDob] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+function Signup(){
+  const navigate = useNavigate();
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fullname, phone, dob, username, password }),
-        credentials: 'include'
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        window.location.href = '/homePage';
-      } else {
-        alert(data.message || 'Registration failed');
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-    }
+    console.log("Signed up with username:", username);
+    navigate("/home"); // Direct access to HomePage
   };
-  
 
   return (
     <div className="signup-container">
         <h2>Create Account</h2>
       <div className="signup-box">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSignup}>
           <div className="form-group">
             <input
               type="text"
@@ -192,117 +144,125 @@ function Signup() {
       </div>
     </div>
   );
-}
-function TellUsAboutYourFarm() {
-  const [nitrogen, setNitrogen] = useState('');
-  const [phosphorus, setPhosphorus] = useState('');
-  const [potassium, setPotassium] = useState('');
-  const [soiltype, setSoiltype] = useState('');
-  const [state, setState] = useState('');
-  const [district, setDistrict] = useState('');
-  const [subdivision, setSubdivision] = useState('');
-  const [plotnumber, setPlotnumber] = useState('');
-  const [area, setArea] = useState('');
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3000/api/tellusaboutyourfarm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nitrogen, phosphorus, potassium, soiltype, state, district, subdivision, plotnumber, area }),
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        alert('Farm details submitted successfully!');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Failed to submit farm details');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred');
-    }
-  };
-
+function Home() {
+  useChatbot();
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="number" value={nitrogen} onChange={(e) => setNitrogen(e.target.value)} placeholder="Nitrogen" required />
-      <input type="number" value={phosphorus} onChange={(e) => setPhosphorus(e.target.value)} placeholder="Phosphorus" required />
-      <input type="number" value={potassium} onChange={(e) => setPotassium(e.target.value)} placeholder="Potassium" required />
-      <input type="text" value={soiltype} onChange={(e) => setSoiltype(e.target.value)} placeholder="Soil Type" required />
-      <input type="text" value={state} onChange={(e) => setState(e.target.value)} placeholder="State" required />
-      <input type="text" value={district} onChange={(e) => setDistrict(e.target.value)} placeholder="District" required />
-      <input type="text" value={subdivision} onChange={(e) => setSubdivision(e.target.value)} placeholder="Subdivision" required />
-      <input type="text" value={plotnumber} onChange={(e) => setPlotnumber(e.target.value)} placeholder="Plot Number" required />
-      <input type="number" value={area} onChange={(e) => setArea(e.target.value)} placeholder="Area (sq ft)" required />
-      <button type="submit">Submit</button>
-    </form>
+  <div className="Home">
+        <div className="navbar">
+            <ul>
+                <li><div className="heading">Harvest Harmony</div></li>
+                <li><a href="#">Home</a></li>
+                <li><a href="/tellus">Tell us about your farm</a></li>
+                <li><a href="#"><img src={i1} alt="mail" /></a></li>
+                <li><a href="#"><img src={i2} alt="pp" /></a></li>
+            </ul>
+        </div>
+        <CropMatrix />
+        <div className="chatbot-container">
+          </div>
+    </div>
   );
 }
 
-
-// Home Page Component
-function HomePage() {
-  const [user, setUser] = useState(null);
-  const history = useHistory();
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/homePage', {
-      credentials: 'include'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Not authenticated');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.user) {
-          setUser(data.user);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        history.push('/login');
-      });
-  }, [history]);
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/logout', { credentials: 'include' });
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+function Tellus(){
+  const [formData, setFormData] = useState({
+      nitrogen: '',
+      phosphorus: '',
+      potassium: '',
+      soilType: '',
+      state: '',
+      district: '',
+      subdivision: '',
+      plotNumber: '',
+      area: ''
+  });
+  
+  const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prevState => ({
+          ...prevState,
+          [name]: value
+      }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
   };
 
-  if (!user) {
-    return <Redirect to="/login" />;
-  }
+  return(
+    <>
+  <div className="tellus-container">
+    <h1>TELL US ABOUT<br />YOUR FARM</h1>
+    <form className="farm-form" onSubmit={handleSubmit}>
+      <p className="form-notice">
+        If you do not know these values, contact us and we will come and test these.
+      </p>
+      
+      <div className="form-group">
+        <label>Nitrogen-</label>
+        <input type="text" name="nitrogen" value={formData.nitrogen} onChange={handleChange} />
+      </div>
 
-  return (
-    <div>
-      <h1>Welcome, {user.username}!</h1>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+      <div className="form-group">
+        <label>Phosphorus-</label>
+        <input type="text" name="phosphorus" value={formData.phosphorus} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Potassium-</label>
+        <input type="text" name="potassium" value={formData.potassium} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Soil type-</label>
+        <input type="text" name="soilType" value={formData.soilType} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>State-</label>
+        <input type="text" name="state" value={formData.state} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>District-</label>
+        <input type="text" name="district" value={formData.district} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Subdivision-</label>
+        <input type="text" name="subdivision" value={formData.subdivision} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Plot number-</label>
+        <input type="text" name="plotNumber" value={formData.plotNumber} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Area</label>
+        <input type="text" name="area" value={formData.area} onChange={handleChange} />
+      </div>
+
+      <button type="submit" className="submit-btn">Submit</button>
+    </form>
+  </div>
+    </>
   );
 }
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={LandingPage} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/homePage" component={HomePage} />
-        <Route path="/tellusaboutyourfarm" component={TellUsAboutYourFarm} />
-
-      </Switch>
+      <Routes>
+        <Route exact path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/tellus" element={<Tellus />} />
+      </Routes>
     </Router>
   );
 }
-export default App
+export default App;

@@ -1,16 +1,19 @@
-// import mail from "./assets/mail.png";
-// import pp from "./assets/pp.webp";
-// function navbar() {
+// import logo from "./assets/logo.avif"
+// import SignInButton from "./SignInButton.jsx"
+// export default function navbar() {
 //     return (
-//         <div className="navbar">
-//             <h1>Hello Harmony</h1>
-//             <ul>
-//                 <li><a href="#">Home</a></li>
-//                 <li><a href="#">Tell us about your farm</a></li>
-//                 <li><a href="#"><img src={mail} alt="Mail"></img></a></li>
-//                 <li><a href="#"><img src={pp} alt="pp"></img></a></li>
-//             </ul>
+//         <div className="background-image">
+//             <div className="navbar">
+//                 <img src={logo} alt="logo" />
+//                 <h1>Hello Harmony</h1>
+//                 <ul>
+//                     <li><a href="#">Home</a></li>
+//                     <li><a href="#">About</a></li>
+//                     <li><a href="#">Services</a></li>
+//                     <li><a href="#">Contact</a></li>
+//                 </ul>
+//             </div>
+//             <SignInButton />
 //         </div>
 //     );
 // }
-// export default navbar;
