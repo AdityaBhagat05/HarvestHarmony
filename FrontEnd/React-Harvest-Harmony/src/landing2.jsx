@@ -30,14 +30,7 @@ function landing2() {
               <img src={i3} alt="Fertilizer in hands" />
               <h3>A la Carte Activities</h3>
             </div>
-    
-            <div className="ministry-logo">
-              <img 
-                src={i4} 
-                alt="Ministry of Agriculture Logo" 
-              />
-              <p>Ministry of Agriculture & Farmers Welfare<br />Government of India</p>
-            </div>
+
           </div>
         </div>
       );
