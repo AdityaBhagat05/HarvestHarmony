@@ -3,6 +3,7 @@ import Landing2 from "./landing2.jsx"
 import Landing3 from "./landing3.jsx"
 import Landing4 from "./landing4.jsx"
 import Landing5 from "./landing5.jsx"
+import Home from "./Home.jsx"
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
@@ -32,6 +33,7 @@ function LandingPage() {
       {/* <Link to="/login">Login</Link>
       <Link to="/signup">Sign Up</Link> */}
     </div>
+    <Home />
     </>
   );
 }
