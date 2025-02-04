@@ -46,17 +46,32 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/HarvestHarm
 
 // User model
 const userSchema = new mongoose.Schema({
-  email: String,
+  fullname: String,
+  phone: String,
+  dob: String,
+  username: String,
   password: String,
+  farmData: {
+    nitrogen: String,
+    phosphorus: String,
+    potassium: String,
+    soiltype: String,
+    state: String,
+    district: String,
+    subdivision: String,
+    plotnumber: String,
+    area: String
+  }
 });
+
 const User = mongoose.model("User", userSchema);
 
 // Passport configuration
 passport.use(new LocalStrategy(
-  { usernameField: 'email' },
-  async (email, password, done) => {
+  { usernameField: 'username' },
+  async (username, password, done) => {
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ username });
       if (!user) return done(null, false, { message: "User not found" });
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid) {
@@ -91,14 +106,14 @@ app.post("/api/login", passport.authenticate("local"), (req, res) => {
 });
 
 app.post("/api/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { fullname,phone,dob,username,password} = req.body;
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ fullname,phone,dob,username, password: hashedPassword });
     await newUser.save();
     req.login(newUser, (err) => {
       if (err) {
@@ -110,6 +125,28 @@ app.post("/api/register", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error during registration" });
+  }
+});
+app.post("/api/tellusaboutyourfarm", async (req, res) => {
+  const { nitrogen, phosphorus, potassium, soiltype, state, district, subdivision, plotnumber, area } = req.body;
+
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "User not authenticated" });
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.farmData = { nitrogen, phosphorus, potassium, soiltype, state, district, subdivision, plotnumber, area };
+    await user.save();
+
+    res.json({ message: "Farm data saved successfully", user });
+  } catch (error) {
+    console.error("Error saving farm data:", error);
+    res.status(500).json({ message: "Error saving farm data" });
   }
 });
 

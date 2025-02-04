@@ -3,7 +3,9 @@ import React from 'react';
 function SignInButton() {
     const handleSignIn = () => {
         //Bhagat ka sign in 
-        console.log('Sign in clicked');
+        <div>
+      <Link to="App.jsx/login">Login</Link>
+    </div>
     };
 
     return (
